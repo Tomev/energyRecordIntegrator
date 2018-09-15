@@ -17,7 +17,6 @@ namespace energyRecordIntegrator
                 new System.IO.StreamReader(pathToFile);
             while ((line = file.ReadLine()) != null)
             {
-                System.Console.WriteLine(line);
                 counter++;
             }
 

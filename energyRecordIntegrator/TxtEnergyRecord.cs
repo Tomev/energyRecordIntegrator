@@ -6,15 +6,27 @@ namespace energyRecordIntegrator
 {
     class TxtEnergyRecord
     {
-        enum DatePart { Year = 0, Month = 1, Day = 2 };
-        enum TimePart { Hour = 0, Minute = 1 };
+        enum DatePart:int { Year = 0, Month = 1, Day = 2 };
+        enum TimePart:int { Hour = 0, Minute = 1 };
+        enum LinePart:int { EZT = 0, Date = 1, Time = 2, EnIn = 3, EnOut = 4, Position = 5 };
 
-        private string position;
         private string EZT;
-        private string driverName;
+        private DateTime departureDateTime;
         private double energyIn;
         private double energyOut;
-        private DateTime departureDateTime;
+        private string position;
+        private string driverName;
+
+        public TxtEnergyRecord(string line)
+        {
+            string[] lineParts = line.Split("\t");
+            this.EZT = lineParts[(int) LinePart.EZT];
+            this.departureDateTime = GetDateTimeFromStrings(
+                lineParts[(int) LinePart.Date], lineParts[(int) LinePart.Time]);
+            this.energyIn = Double.Parse(lineParts[(int) LinePart.EnIn]);
+            this.energyOut = Double.Parse(lineParts[(int)LinePart.EnOut]);
+            this.position = lineParts[(int)LinePart.Position];
+        }
 
         public TxtEnergyRecord(string position, string EZT, double energyIn, double energyOut)
         {
