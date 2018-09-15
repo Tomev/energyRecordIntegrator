@@ -4,8 +4,11 @@ using System.Text;
 
 namespace energyRecordIntegrator
 {
-    class EnergyRecord
+    class TxtEnergyRecord
     {
+        enum DatePart { Year = 0, Month = 1, Day = 2 };
+        enum TimePart { Hour = 0, Minute = 1 };
+
         private string position;
         private string EZT;
         private string driverName;
@@ -13,7 +16,7 @@ namespace energyRecordIntegrator
         private double energyOut;
         private DateTime departureDateTime;
 
-        public EnergyRecord(string position, string EZT, double energyIn, double energyOut)
+        public TxtEnergyRecord(string position, string EZT, double energyIn, double energyOut)
         {
             this.position = position;
             this.EZT = EZT;
@@ -21,13 +24,13 @@ namespace energyRecordIntegrator
             this.energyOut = energyOut;
         }
 
-        public EnergyRecord(string position, string EZT, double energyIn, double energyOut, DateTime departureDateTime)
+        public TxtEnergyRecord(string position, string EZT, double energyIn, double energyOut, DateTime departureDateTime)
             : this(position, EZT, energyIn, energyOut)
         {
             this.departureDateTime = departureDateTime;
         }
 
-        public EnergyRecord(string position, string EZT, double energyIn, double energyOut, string time, string date)
+        public TxtEnergyRecord(string position, string EZT, double energyIn, double energyOut, string time, string date)
             : this(position, EZT, energyIn, energyOut)
         {
             this.departureDateTime = GetDateTimeFromStrings(date, time);
@@ -38,11 +41,11 @@ namespace energyRecordIntegrator
             string[] dateParts = date.Split("-");
             string[] timeParts = time.Split(":");
 
-            return new DateTime(int.Parse(dateParts[0]), // year
-                                int.Parse(dateParts[1]), // month
-                                int.Parse(dateParts[2]), // day
-                                int.Parse(timeParts[0]), // hour
-                                int.Parse(timeParts[1]), // minute
+            return new DateTime(int.Parse(dateParts[DatePart.Year]),
+                                int.Parse(dateParts[DatePart.Month]),
+                                int.Parse(dateParts[DatePart.Day]),
+                                int.Parse(timeParts[TimePart.Hour]),
+                                int.Parse(timeParts[TimePart.Minute]), 
                                 0); // seconds
         }
 
