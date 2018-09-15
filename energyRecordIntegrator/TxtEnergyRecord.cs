@@ -41,11 +41,11 @@ namespace energyRecordIntegrator
             string[] dateParts = date.Split("-");
             string[] timeParts = time.Split(":");
 
-            return new DateTime(int.Parse(dateParts[DatePart.Year]),
-                                int.Parse(dateParts[DatePart.Month]),
-                                int.Parse(dateParts[DatePart.Day]),
-                                int.Parse(timeParts[TimePart.Hour]),
-                                int.Parse(timeParts[TimePart.Minute]), 
+            return new DateTime(int.Parse(dateParts[(int) DatePart.Year]),
+                                int.Parse(dateParts[(int) DatePart.Month]),
+                                int.Parse(dateParts[(int) DatePart.Day]),
+                                int.Parse(timeParts[(int) TimePart.Hour]),
+                                int.Parse(timeParts[(int) TimePart.Minute]), 
                                 0); // seconds
         }
 
