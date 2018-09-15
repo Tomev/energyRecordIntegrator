@@ -77,7 +77,18 @@ namespace energyRecordIntegrator
 
         private string GetTimeStringFromDateTime()
         {
-            return departureDateTime.Hour.ToString() + ":" + departureDateTime.Minute.ToString();
+            int hour = departureDateTime.Hour;
+            int minute = departureDateTime.Minute;
+
+            string time = "";
+
+            if (hour < 10) time = "0";
+            time += hour.ToString() + ":";
+
+            if (minute < 10) time += "0";
+            time += minute.ToString();
+
+            return time;
         }
     }
 }
