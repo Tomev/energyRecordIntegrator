@@ -6,46 +6,47 @@ namespace energyRecordIntegrator
 {
     class TxtEnergyRecord
     {
-        enum DatePart:int { Year = 0, Month = 1, Day = 2 };
-        enum TimePart:int { Hour = 0, Minute = 1 };
-        enum LinePart:int { EZT = 0, Date = 1, Time = 2, EnIn = 3, EnOut = 4, Position = 5 };
+        enum DatePart { Year = 0, Month = 1, Day = 2 };
+        enum TimePart { Hour = 0, Minute = 1 };
+        enum LinePart { EZT = 0, Date = 1, Time = 2, EnIn = 3, EnOut = 4, Position = 5 };
 
-        private string EZT;
-        private DateTime departureDateTime;
-        private double energyIn;
-        private double energyOut;
-        private string position;
-        private string driverName;
+        private string _EZT;
+        private DateTime _departureDateTime;
+        private double _energyIn;
+        private double _energyOut;
+        private string _position;
+        private string _driverName;
 
         public TxtEnergyRecord(string line)
         {
             string[] lineParts = line.Split("\t");
-            this.EZT = lineParts[(int) LinePart.EZT];
-            this.departureDateTime = GetDateTimeFromStrings(
+
+            _EZT = lineParts[(int) LinePart.EZT];
+            _departureDateTime = GetDateTimeFromStrings(
                 lineParts[(int) LinePart.Date], lineParts[(int) LinePart.Time]);
-            this.energyIn = Double.Parse(lineParts[(int) LinePart.EnIn]);
-            this.energyOut = Double.Parse(lineParts[(int)LinePart.EnOut]);
-            this.position = lineParts[(int)LinePart.Position];
+            _energyIn = double.Parse(lineParts[(int) LinePart.EnIn].Replace(",", "."));
+            _energyOut = double.Parse(lineParts[(int) LinePart.EnOut].Replace(",", "."));
+            _position = lineParts[(int) LinePart.Position];
         }
 
         public TxtEnergyRecord(string position, string EZT, double energyIn, double energyOut)
         {
-            this.position = position;
-            this.EZT = EZT;
-            this.energyIn = energyIn;
-            this.energyOut = energyOut;
+            _position = position;
+            _EZT = EZT;
+            _energyIn = energyIn;
+            _energyOut = energyOut;
         }
 
         public TxtEnergyRecord(string position, string EZT, double energyIn, double energyOut, DateTime departureDateTime)
             : this(position, EZT, energyIn, energyOut)
         {
-            this.departureDateTime = departureDateTime;
+            _departureDateTime = departureDateTime;
         }
 
         public TxtEnergyRecord(string position, string EZT, double energyIn, double energyOut, string time, string date)
             : this(position, EZT, energyIn, energyOut)
         {
-            this.departureDateTime = GetDateTimeFromStrings(date, time);
+            _departureDateTime = GetDateTimeFromStrings(date, time);
         }
 
         private DateTime GetDateTimeFromStrings(string date, string time)
@@ -63,22 +64,22 @@ namespace energyRecordIntegrator
 
         public override string ToString()
         {
-            return EZT + "\t" + GetDateStringFromDateTime() + "\t" + 
-            GetTimeStringFromDateTime() + "\t" + energyIn.ToString() + "\t" +
-            energyOut.ToString() + "\t" + position + "\t" + driverName + "\n";
+            return _EZT + "\t" + GetDateStringFromDateTime() + "\t" + 
+            GetTimeStringFromDateTime() + "\t" + _energyIn.ToString().Replace(".", ",") + "\t" +
+            _energyOut.ToString().Replace(".", ",") + "\t" + _position + "\t" + _driverName + "\n";
         }
 
         private string GetDateStringFromDateTime()
         {
-            return departureDateTime.Year.ToString() + "-"
-                    + departureDateTime.Month.ToString() + "-"
-                    + departureDateTime.Day.ToString();
+            return _departureDateTime.Year.ToString() + "-"
+                    + _departureDateTime.Month.ToString() + "-"
+                    + _departureDateTime.Day.ToString();
         }
 
         private string GetTimeStringFromDateTime()
         {
-            int hour = departureDateTime.Hour;
-            int minute = departureDateTime.Minute;
+            int hour = _departureDateTime.Hour;
+            int minute = _departureDateTime.Minute;
 
             string time = "";
 

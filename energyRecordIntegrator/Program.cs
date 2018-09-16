@@ -32,15 +32,12 @@ namespace energyRecordIntegrator
 
 
             // Find xls and xlsx files in given path
-
             List<string> extensions = new List<string> { ".xls", ".xlsx" };
             var excelFilesList = Directory.GetFiles(pathToDir, "*.*")
                                     .Where(excelFile => extensions.Contains(Path.GetExtension(excelFile).ToLower()));
             
-
-
-
-            System.Console.WriteLine("There were {0} lines.", txtEnergyRecordsList.Count);
+            System.Console.WriteLine("There were {0} lines in TXT file.", txtEnergyRecordsList.Count);
+            System.Console.WriteLine("{0} excel files found.\n", excelFilesList.Count());
             System.Console.WriteLine(txtEnergyRecordsList[0].ToString());
             System.Console.WriteLine(txtEnergyRecordsList[1].ToString());
             System.Console.WriteLine(txtEnergyRecordsList[2].ToString());
