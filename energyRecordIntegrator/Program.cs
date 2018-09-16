@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace energyRecordIntegrator
 { 
@@ -27,6 +29,17 @@ namespace energyRecordIntegrator
             }
 
             file.Close();
+
+
+            // Find xls and xlsx files in given path
+
+            List<string> extensions = new List<string> { ".xls", ".xlsx" };
+            var excelFilesList = Directory.GetFiles(pathToDir, "*.*")
+                                    .Where(excelFile => extensions.Contains(Path.GetExtension(excelFile).ToLower()));
+            
+
+
+
             System.Console.WriteLine("There were {0} lines.", txtEnergyRecordsList.Count);
             System.Console.WriteLine(txtEnergyRecordsList[0].ToString());
             System.Console.WriteLine(txtEnergyRecordsList[1].ToString());
