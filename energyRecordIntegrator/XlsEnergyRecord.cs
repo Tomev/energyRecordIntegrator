@@ -12,12 +12,11 @@ namespace energyRecordIntegrator
         private string _managerName;
         private string _trainName;
 
-        public XlsEnergyRecord(string day, string startHour, string endHour, 
+        public XlsEnergyRecord(string startDate, string endDate, 
             string driverName, string managerName, string trainName)
         {
-            _startDate = DateTime.Parse(day + " " + startHour);
-            _endDate = DateTime.Parse(day + " " + endHour);
-
+            _startDate = DateTime.Parse(startDate);
+            _endDate = DateTime.Parse(endDate);
             _driverName = driverName;
             _managerName = managerName;
             _trainName = trainName;

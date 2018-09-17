@@ -25,12 +25,12 @@ namespace energyRecordIntegrator
 
             // Use this list to gather data of trains.
 
-
+            List<XlsEnergyRecord> xlsEnergyRecordsList = new List<XlsEnergyRecord>();
 
             int startRow = 4;
             int trainColumn = 15;
             int timeStartColumn = 6;
-            int timeFinishColumn = 8;
+            int timeFinishColumn = 11;
             int driverColumn = 32;
             int managerColumn = 40;
             int recordTableIndex = 0;
@@ -58,8 +58,22 @@ namespace energyRecordIntegrator
                     var dataSet = reader.AsDataSet(conf);
                     var dataTable = dataSet.Tables[0];
 
-                    var data = dataTable.Rows[4][40];
-                    System.Console.WriteLine(data);
+                    for(int i = startRow; i < dataTable.Rows.Count; ++i)
+                    {
+                        xlsEnergyRecordsList.Add(
+                            new XlsEnergyRecord(
+                                dataTable.Rows[i][timeStartColumn].ToString(),
+                                dataTable.Rows[i][timeFinishColumn].ToString(),
+                                dataTable.Rows[i][driverColumn].ToString(),
+                                dataTable.Rows[i][managerColumn].ToString(),
+                                dataTable.Rows[i][trainColumn].ToString()
+                                )
+                            );
+                    }
+
+                    //var data = dataTable.Rows[4][40];
+
+                    System.Console.WriteLine(xlsEnergyRecordsList.Count);
                     //...
                 }
             }
