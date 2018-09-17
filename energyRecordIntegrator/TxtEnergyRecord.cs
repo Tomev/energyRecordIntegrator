@@ -53,7 +53,7 @@ namespace energyRecordIntegrator
 
         public override string ToString()
         {
-            return _EZT + "\t" + _departureDateTime.ToString("dd-MM-yyyy") + "\t" +
+            return _EZT + "\t" + _departureDateTime.ToString("yyyy-MM-dd") + "\t" +
             _departureDateTime.ToString("HH:mm") + "\t" + _energyIn.ToString().Replace(".", ",") + "\t" +
             _energyOut.ToString().Replace(".", ",") + "\t" + _position + "\t" + _driverName + "\n";
         }
