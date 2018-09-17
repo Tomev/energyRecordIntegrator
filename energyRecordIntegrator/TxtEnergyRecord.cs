@@ -55,7 +55,7 @@ namespace energyRecordIntegrator
         {
             return _EZT + "\t" + _departureDateTime.ToString("yyyy-MM-dd") + "\t" +
             _departureDateTime.ToString("HH:mm") + "\t" + _energyIn.ToString().Replace(".", ",") + "\t" +
-            _energyOut.ToString().Replace(".", ",") + "\t" + _position + "\t" + _driverName + "\n";
+            _energyOut.ToString().Replace(".", ",") + "\t" + _position + "\t" + _driverName + _managerName +  "\n";
         }
 
         public void SetDriverName(string driverName)
