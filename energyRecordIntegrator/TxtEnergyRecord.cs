@@ -25,8 +25,7 @@ namespace energyRecordIntegrator
             string[] lineParts = line.Split("\t");
 
             _EZT = lineParts[(int) LinePart.EZT];
-            _departureDateTime = GetDateTimeFromStrings(
-                lineParts[(int) LinePart.Date], lineParts[(int) LinePart.Time]);
+            _departureDateTime = DateTime.Parse(lineParts[(int) LinePart.Date] + " " + lineParts[(int) LinePart.Time]);
             _energyIn = double.Parse(lineParts[(int) LinePart.EnIn], CultureInfo.InvariantCulture);
             _energyOut = double.Parse(lineParts[(int) LinePart.EnOut], CultureInfo.InvariantCulture);
             _position = lineParts[(int) LinePart.Position];
@@ -49,20 +48,7 @@ namespace energyRecordIntegrator
         public TxtEnergyRecord(string position, string EZT, double energyIn, double energyOut, string time, string date)
             : this(position, EZT, energyIn, energyOut)
         {
-            _departureDateTime = GetDateTimeFromStrings(date, time);
-        }
-
-        private DateTime GetDateTimeFromStrings(string date, string time)
-        {
-            string[] dateParts = date.Split("-");
-            string[] timeParts = time.Split(":");
-
-            return new DateTime(int.Parse(dateParts[(int) DatePart.Year]),
-                                int.Parse(dateParts[(int) DatePart.Month]),
-                                int.Parse(dateParts[(int) DatePart.Day]),
-                                int.Parse(timeParts[(int) TimePart.Hour]),
-                                int.Parse(timeParts[(int) TimePart.Minute]), 
-                                0); // seconds
+            _departureDateTime = DateTime.Parse(date + " " + time);
         }
 
         public override string ToString()
@@ -70,6 +56,35 @@ namespace energyRecordIntegrator
             return _EZT + "\t" + _departureDateTime.ToString("dd-MM-yyyy") + "\t" +
             _departureDateTime.ToString("HH:mm") + "\t" + _energyIn.ToString().Replace(".", ",") + "\t" +
             _energyOut.ToString().Replace(".", ",") + "\t" + _position + "\t" + _driverName + "\n";
+        }
+
+        public void SetDriverName(string driverName)
+        {
+            _driverName = driverName;
+        }
+
+        public void SetManagerName(string managerName)
+        {
+            _managerName = managerName;
+        }
+
+        public bool ExtractEligibleData(XlsEnergyRecord xlsEnergyRecord)
+        {
+            if(! _EZT.Equals(xlsEnergyRecord.GetTrainName()))
+            {
+                return false;
+            }
+
+            if(_departureDateTime >= xlsEnergyRecord.GetStartTime() && _departureDateTime <= xlsEnergyRecord.GetEndTime())
+            {
+                _driverName = xlsEnergyRecord.GetDriverName();
+                _managerName = xlsEnergyRecord.GetManagerName();
+
+                return true;
+            }
+
+            return false;
+            
         }
     }
 }
