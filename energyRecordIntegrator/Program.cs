@@ -80,9 +80,15 @@ namespace energyRecordIntegrator
             
             System.Console.WriteLine("There were {0} lines in TXT file.", txtEnergyRecordsList.Count);
             System.Console.WriteLine("{0} excel files found.\n", excelFilesList.Count());
+            System.Console.WriteLine("{0} excel objects created.", xlsEnergyRecordsList.Count);
+
             System.Console.WriteLine(txtEnergyRecordsList[0].ToString());
             System.Console.WriteLine(txtEnergyRecordsList[1].ToString());
             System.Console.WriteLine(txtEnergyRecordsList[2].ToString());
+
+            System.Console.WriteLine(xlsEnergyRecordsList[0].ToString());
+            System.Console.WriteLine(xlsEnergyRecordsList[1].ToString());
+            System.Console.WriteLine(xlsEnergyRecordsList[2].ToString());
 
             Console.ReadLine();
         }
