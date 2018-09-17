@@ -27,5 +27,30 @@ namespace energyRecordIntegrator
             return _driverName + "\t" + _managerName + "\t" + _trainName + "\t"
                 + _startDate.ToString("dd-MM-yyyy hh:mm") + _endDate.ToString("dd-MM-yyyy hh:mm");
         }
+
+        public string GetTrainName()
+        {
+            return _trainName;
+        }
+
+        public string GetDriverName()
+        {
+            return _driverName;
+        }
+
+        public string GetManagerName()
+        {
+            return _managerName;
+        }
+
+        public DateTime GetStartTime()
+        {
+            return _startDate;
+        }
+
+        public DateTime GetEndTime()
+        {
+            return _endDate;
+        }
     }
 }
