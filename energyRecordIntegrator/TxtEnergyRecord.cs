@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,8 +26,8 @@ namespace energyRecordIntegrator
             _EZT = lineParts[(int) LinePart.EZT];
             _departureDateTime = GetDateTimeFromStrings(
                 lineParts[(int) LinePart.Date], lineParts[(int) LinePart.Time]);
-            _energyIn = double.Parse(lineParts[(int) LinePart.EnIn].Replace(",", "."));
-            _energyOut = double.Parse(lineParts[(int) LinePart.EnOut].Replace(",", "."));
+            _energyIn = double.Parse(lineParts[(int) LinePart.EnIn], CultureInfo.InvariantCulture);
+            _energyOut = double.Parse(lineParts[(int) LinePart.EnOut], CultureInfo.InvariantCulture);
             _position = lineParts[(int) LinePart.Position];
         }
 
