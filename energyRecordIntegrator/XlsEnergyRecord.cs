@@ -8,12 +8,19 @@ namespace energyRecordIntegrator
     {
         private DateTime _startDate;
         private DateTime _endDate;
-        private List<string> driversNames;
-        private List<string> driversComments;
+        private string _driverName;
+        private string _managerName;
+        private string _trainName;
 
-        public XlsEnergyRecord()
+        public XlsEnergyRecord(string day, string startHour, string endHour, 
+            string driverName, string managerName, string trainName)
         {
+            _startDate = DateTime.Parse(day + " " + startHour);
+            _endDate = DateTime.Parse(day + " " + endHour);
 
+            _driverName = driverName;
+            _managerName = managerName;
+            _trainName = trainName;
         }
     }
 }

@@ -10,10 +10,13 @@ namespace energyRecordIntegrator
     {
         static void Main(string[] args)
         {
-            string pathToDir = @"d:\Dysk Google\Praca\ojciec\2018\energia\";
-            string pathToFile = pathToDir + "ENERGIA.TXT";
+            // https://github.com/ExcelDataReader/ExcelDataReader/issues/241
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-            List<TxtEnergyRecord> txtEnergyRecordsList = GetTxtEnergyRecords(pathToFile);
+            string pathToDir = @"d:\Dysk Google\Praca\ojciec\2018\energia\";
+            string pathToEnergyFile = pathToDir + "ENERGIA.TXT";
+
+            List<TxtEnergyRecord> txtEnergyRecordsList = GetTxtEnergyRecords(pathToEnergyFile);
 
             // Find xls and xlsx files in given path
             List<string> extensions = new List<string> { ".xls", ".xlsx" };
@@ -22,29 +25,42 @@ namespace energyRecordIntegrator
 
             // Use this list to gather data of trains.
 
+
+
+            int startRow = 4;
+            int trainColumn = 15;
+            int timeStartColumn = 6;
+            int timeFinishColumn = 8;
+            int driverColumn = 32;
+            int managerColumn = 40;
+            int recordTableIndex = 0;
+
+           
             foreach(string excelFilePath in excelFilesList)
-            { 
+            {
+                System.Console.WriteLine(excelFilePath);
+
                 using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
                 {
-                    // Auto-detect format, supports:
-                    //  - Binary Excel files (2.0-2003 format; *.xls)
-                    //  - OpenXml Excel files (2007 format; *.xlsx)
+                    IExcelDataReader reader;
 
-                    var r = ExcelReaderFactory.CreateBinaryReader(stream);
+                    reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream);
 
-                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    //// reader.IsFirstRowAsColumnNames
+                    var conf = new ExcelDataSetConfiguration
                     {
-
-                        // 1. Use the reader methods
-                        do
+                        ConfigureDataTable = _ => new ExcelDataTableConfiguration
                         {
-                            while (reader.Read())
-                            {
-                                // reader.GetDouble(0);
-                                
-                            }
-                        } while (reader.NextResult());
-                    }
+                            UseHeaderRow = true
+                        }
+                    };
+
+                    var dataSet = reader.AsDataSet(conf);
+                    var dataTable = dataSet.Tables[0];
+
+                    var data = dataTable.Rows[4][40];
+                    System.Console.WriteLine(data);
+                    //...
                 }
             }
             
@@ -56,6 +72,8 @@ namespace energyRecordIntegrator
 
             Console.ReadLine();
         }
+
+        
 
         static private List<TxtEnergyRecord> GetTxtEnergyRecords(string pathToFile)
         {
@@ -78,5 +96,6 @@ namespace energyRecordIntegrator
 
             return txtEnergyRecordsList;
         }
+
     }
 }
