@@ -18,6 +18,7 @@ namespace energyRecordIntegrator
         private double _energyOut;
         private string _position;
         private string _driverName;
+        private string _managerName;
 
         public TxtEnergyRecord(string line)
         {
@@ -66,32 +67,9 @@ namespace energyRecordIntegrator
 
         public override string ToString()
         {
-            return _EZT + "\t" + GetDateStringFromDateTime() + "\t" + 
-            GetTimeStringFromDateTime() + "\t" + _energyIn.ToString().Replace(".", ",") + "\t" +
+            return _EZT + "\t" + _departureDateTime.ToString("dd-MM-yyyy") + "\t" +
+            _departureDateTime.ToString("HH:mm") + "\t" + _energyIn.ToString().Replace(".", ",") + "\t" +
             _energyOut.ToString().Replace(".", ",") + "\t" + _position + "\t" + _driverName + "\n";
-        }
-
-        private string GetDateStringFromDateTime()
-        {
-            return _departureDateTime.Year.ToString() + "-"
-                    + _departureDateTime.Month.ToString() + "-"
-                    + _departureDateTime.Day.ToString();
-        }
-
-        private string GetTimeStringFromDateTime()
-        {
-            int hour = _departureDateTime.Hour;
-            int minute = _departureDateTime.Minute;
-
-            string time = "";
-
-            if (hour < 10) time = "0";
-            time += hour.ToString() + ":";
-
-            if (minute < 10) time += "0";
-            time += minute.ToString();
-
-            return time;
         }
     }
 }
