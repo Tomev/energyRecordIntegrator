@@ -8,73 +8,40 @@ namespace energyRecordIntegrator
 { 
     class Program
     {
+        // For excel file handling
+        static int startRow = 4;
+        static int trainColumn = 15;
+        static int timeStartColumn = 6;
+        static int timeFinishColumn = 11;
+        static int driverColumn = 32;
+        static int managerColumn = 40;
+        static int recordTableIndex = 0;
+
+        // Configuration data
+        static string pathToDir = @"d:\Dysk Google\Praca\ojciec\2018\energia\";
+
         static void Main(string[] args)
         {
-            System.Console.WriteLine("Creating list of txt objects.");
-
             // https://github.com/ExcelDataReader/ExcelDataReader/issues/241
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-            string pathToDir = @"d:\Dysk Google\Praca\ojciec\2018\energia\";
+
+            System.Console.WriteLine("Creating list of txt objects.");
+
             string pathToEnergyFile = pathToDir + "ENERGIA.TXT";
 
             List<TxtEnergyRecord> txtEnergyRecordsList = GetTxtEnergyRecords(pathToEnergyFile);
 
-            System.Console.WriteLine("Finding xls file names.");
+            System.Console.WriteLine("Finding xls and xlsx file paths.");
 
-            // Find xls and xlsx files in given path
             List<string> extensions = new List<string> { ".xls", ".xlsx" };
             var excelFilesList = Directory.GetFiles(pathToDir, "*.*")
                                     .Where(excelFile => extensions.Contains(Path.GetExtension(excelFile).ToLower()));
 
             System.Console.WriteLine("Creating xls train data objects.");
 
-            // Use this list to gather data of trains.
-            List<XlsEnergyRecord> xlsEnergyRecordsList = new List<XlsEnergyRecord>();
+            List<XlsEnergyRecord> xlsEnergyRecordsList = GetXlsEnergyRecords(excelFilesList);
 
-            int startRow = 4;
-            int trainColumn = 15;
-            int timeStartColumn = 6;
-            int timeFinishColumn = 11;
-            int driverColumn = 32;
-            int managerColumn = 40;
-            int recordTableIndex = 0;
-   
-            foreach(string excelFilePath in excelFilesList)
-            {
-                using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
-                {
-                    IExcelDataReader reader;
-
-                    reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream);
-
-                    var conf = new ExcelDataSetConfiguration
-                    {
-                        ConfigureDataTable = _ => new ExcelDataTableConfiguration
-                        {
-                            UseHeaderRow = true
-                        }
-                    };
-
-                    var dataSet = reader.AsDataSet(conf);
-                    var dataTable = dataSet.Tables[recordTableIndex];
-
-                    for(int i = startRow; i < dataTable.Rows.Count; ++i)
-                    {
-                        xlsEnergyRecordsList.Add(
-                            new XlsEnergyRecord(
-                                dataTable.Rows[i][timeStartColumn].ToString(),
-                                dataTable.Rows[i][timeFinishColumn].ToString(),
-                                dataTable.Rows[i][driverColumn].ToString(),
-                                dataTable.Rows[i][managerColumn].ToString(),
-                                dataTable.Rows[i][trainColumn].ToString()
-                                )
-                            );
-                    }
-                }
-            }
-
-            // Extract xls data to txt data.
             foreach(TxtEnergyRecord txtEnergyRecord in txtEnergyRecordsList)
             {
                 foreach(XlsEnergyRecord xlsEnergyRecord in xlsEnergyRecordsList)
@@ -83,7 +50,6 @@ namespace energyRecordIntegrator
                 }
             }
 
-            // Write it to file
             System.Console.WriteLine("Writing file.");
 
             string newEnergyFileName = "U_ENERGIA.TXT";
@@ -91,10 +57,7 @@ namespace energyRecordIntegrator
 
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(newEnergyFilePath, true))
             {
-
                 file.WriteLine("EZT\tt[rok-mi-dz]\tt[h:min]\tEwe[kWh]\tEwy[kWh]\tpozycja\tdriver name\tmanagerName\n");
-
-                int l = 0;
 
                 foreach(TxtEnergyRecord txtEnergyRecord in txtEnergyRecordsList)
                 {
@@ -102,8 +65,6 @@ namespace energyRecordIntegrator
                 }
             }
         }
-
-        
 
         static private List<TxtEnergyRecord> GetTxtEnergyRecords(string pathToFile)
         {
@@ -125,6 +86,47 @@ namespace energyRecordIntegrator
             file.Close();
 
             return txtEnergyRecordsList;
+        }
+
+        static private List<XlsEnergyRecord> GetXlsEnergyRecords(IEnumerable<string> excelFilesList)
+        {
+            List<XlsEnergyRecord> xlsEnergyRecordsList = new List<XlsEnergyRecord>();
+
+            foreach (string excelFilePath in excelFilesList)
+            {
+                using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    IExcelDataReader reader;
+
+                    reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream);
+
+                    var conf = new ExcelDataSetConfiguration
+                    {
+                        ConfigureDataTable = _ => new ExcelDataTableConfiguration
+                        {
+                            UseHeaderRow = true
+                        }
+                    };
+
+                    var dataSet = reader.AsDataSet(conf);
+                    var dataTable = dataSet.Tables[recordTableIndex];
+
+                    for (int i = startRow; i < dataTable.Rows.Count; ++i)
+                    {
+                        xlsEnergyRecordsList.Add(
+                            new XlsEnergyRecord(
+                                dataTable.Rows[i][timeStartColumn].ToString(),
+                                dataTable.Rows[i][timeFinishColumn].ToString(),
+                                dataTable.Rows[i][driverColumn].ToString(),
+                                dataTable.Rows[i][managerColumn].ToString(),
+                                dataTable.Rows[i][trainColumn].ToString()
+                                )
+                            );
+                    }
+                }
+            }
+
+            return xlsEnergyRecordsList;
         }
 
     }
