@@ -16,11 +16,12 @@ namespace energyRecordIntegrator
         static int driverColumn = 32;
         static int managerColumn = 40;
         static int recordTableIndex = 0;
+        static int plannedTrainNumberColumn = 2;
 
         // Configuration data
         static string pathToDir = @"d:\Dysk Google\Praca\ojciec\2018\energia\";
         static List<string> extensions = new List<string> { ".xls", ".xlsx" };
-        static string newFileHeader = "EZT\tt[rok-mi-dz]\tt[h:min]\tEwe[kWh]\tEwy[kWh]\tpozycja\t1 maszynista\tkierownik pociągu";
+        static string newFileHeader = "EZT\tt[rok-mi-dz]\tt[h:min]\tEwe[kWh]\tEwy[kWh]\tpozycja\t1 maszynista\tkierownik pociągu\tPlanowy numer pociągu";
         static string newEnergyFileName = "U_ENERGIA.TXT";
 
         static void Main(string[] args)
@@ -121,7 +122,8 @@ namespace energyRecordIntegrator
                                 dataTable.Rows[i][timeFinishColumn].ToString(),
                                 dataTable.Rows[i][driverColumn].ToString(),
                                 dataTable.Rows[i][managerColumn].ToString(),
-                                dataTable.Rows[i][trainColumn].ToString()
+                                dataTable.Rows[i][trainColumn].ToString(),
+                                dataTable.Rows[i][plannedTrainNumberColumn].ToString()
                                 )
                             );
                     }

@@ -11,15 +11,17 @@ namespace energyRecordIntegrator
         private string _driverName;
         private string _managerName;
         private string _trainName;
+        private string _plannedTrainNumber;
 
         public XlsEnergyRecord(string startDate, string endDate, 
-            string driverName, string managerName, string trainName)
+            string driverName, string managerName, string trainName, string plannedTrainNumber)
         {
             _startDate = DateTime.Parse(startDate);
             _endDate = DateTime.Parse(endDate);
             _driverName = driverName;
             _managerName = managerName;
             _trainName = trainName;
+            _plannedTrainNumber = plannedTrainNumber;
         }
 
         public string ToString()
@@ -51,6 +53,11 @@ namespace energyRecordIntegrator
         public DateTime GetEndTime()
         {
             return _endDate;
+        }
+
+        public string GetPlannedTrainNumber()
+        {
+            return _plannedTrainNumber;
         }
     }
 }

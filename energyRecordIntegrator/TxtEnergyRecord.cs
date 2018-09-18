@@ -19,6 +19,7 @@ namespace energyRecordIntegrator
         private string _position;
         private string _driverName;
         private string _managerName;
+        private string _plannedTrainNumber;
 
         public TxtEnergyRecord(string line)
         {
@@ -26,7 +27,6 @@ namespace energyRecordIntegrator
 
             _EZT = lineParts[(int) LinePart.EZT];
             _departureDateTime = DateTime.Parse(lineParts[(int) LinePart.Date] + " " + lineParts[(int) LinePart.Time]);
-            //Console.WriteLine(double.Parse(lineParts[(int)LinePart.EnIn], CultureInfo.InvariantCulture));
             _energyIn = double.Parse(lineParts[(int) LinePart.EnIn].Replace(",", "."), CultureInfo.InvariantCulture);
             _energyOut = double.Parse(lineParts[(int) LinePart.EnOut].Replace(",", "."), CultureInfo.InvariantCulture);
             _position = lineParts[(int) LinePart.Position];
@@ -56,7 +56,8 @@ namespace energyRecordIntegrator
         {
             return _EZT + "\t" + _departureDateTime.ToString("yyyy-MM-dd") + "\t" +
             _departureDateTime.ToString("HH:mm") + "\t" + _energyIn.ToString().Replace(".", ",") + "\t" +
-            _energyOut.ToString().Replace(".", ",") + "\t" + _position + "\t" + _driverName + "\t" + _managerName;
+            _energyOut.ToString().Replace(".", ",") + "\t" + _position + "\t" + _driverName + "\t" + 
+            _managerName + "\t" + _plannedTrainNumber;
         }
 
         public void SetDriverName(string driverName)
@@ -80,6 +81,7 @@ namespace energyRecordIntegrator
             {
                 _driverName = xlsEnergyRecord.GetDriverName();
                 _managerName = xlsEnergyRecord.GetManagerName();
+                _plannedTrainNumber = xlsEnergyRecord.GetPlannedTrainNumber();
 
                 return true;
             }
