@@ -20,7 +20,7 @@ namespace energyRecordIntegrator
         // Configuration data
         static string pathToDir = @"d:\Dysk Google\Praca\ojciec\2018\energia\";
         static List<string> extensions = new List<string> { ".xls", ".xlsx" };
-        static string newFileHeader = "EZT\tt[rok-mi-dz]\tt[h:min]\tEwe[kWh]\tEwy[kWh]\tpozycja\t1 maszynista\tkierownik pociagu\n";
+        static string newFileHeader = "EZT\tt[rok-mi-dz]\tt[h:min]\tEwe[kWh]\tEwy[kWh]\tpozycja\t1 maszynista\tkierownik pociągu";
         static string newEnergyFileName = "U_ENERGIA.TXT";
 
         static void Main(string[] args)
@@ -55,7 +55,7 @@ namespace energyRecordIntegrator
 
             string newEnergyFilePath = pathToDir + newEnergyFileName;
 
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(newEnergyFilePath, true))
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(newEnergyFilePath, true, System.Text.Encoding.Default))
             {
                 file.WriteLine(newFileHeader);
 
@@ -75,7 +75,7 @@ namespace energyRecordIntegrator
             string line;
 
             System.IO.StreamReader file =
-                new System.IO.StreamReader(pathToFile);
+                new System.IO.StreamReader(pathToFile, System.Text.Encoding.GetEncoding("windows-1250"));
 
             // Ingnore first line (headers)
             line = file.ReadLine();

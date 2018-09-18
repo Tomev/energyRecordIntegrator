@@ -26,8 +26,9 @@ namespace energyRecordIntegrator
 
             _EZT = lineParts[(int) LinePart.EZT];
             _departureDateTime = DateTime.Parse(lineParts[(int) LinePart.Date] + " " + lineParts[(int) LinePart.Time]);
-            _energyIn = double.Parse(lineParts[(int) LinePart.EnIn], CultureInfo.InvariantCulture);
-            _energyOut = double.Parse(lineParts[(int) LinePart.EnOut], CultureInfo.InvariantCulture);
+            //Console.WriteLine(double.Parse(lineParts[(int)LinePart.EnIn], CultureInfo.InvariantCulture));
+            _energyIn = double.Parse(lineParts[(int) LinePart.EnIn].Replace(",", "."), CultureInfo.InvariantCulture);
+            _energyOut = double.Parse(lineParts[(int) LinePart.EnOut].Replace(",", "."), CultureInfo.InvariantCulture);
             _position = lineParts[(int) LinePart.Position];
         }
 
@@ -55,7 +56,7 @@ namespace energyRecordIntegrator
         {
             return _EZT + "\t" + _departureDateTime.ToString("yyyy-MM-dd") + "\t" +
             _departureDateTime.ToString("HH:mm") + "\t" + _energyIn.ToString().Replace(".", ",") + "\t" +
-            _energyOut.ToString().Replace(".", ",") + "\t" + _position + "\t" + _driverName + "\t" + _managerName +  "\n";
+            _energyOut.ToString().Replace(".", ",") + "\t" + _position + "\t" + _driverName + "\t" + _managerName;
         }
 
         public void SetDriverName(string driverName)
