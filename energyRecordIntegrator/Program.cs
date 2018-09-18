@@ -10,6 +10,8 @@ namespace energyRecordIntegrator
     {
         static void Main(string[] args)
         {
+            System.Console.WriteLine("Creating list of txt objects.");
+
             // https://github.com/ExcelDataReader/ExcelDataReader/issues/241
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
@@ -18,13 +20,16 @@ namespace energyRecordIntegrator
 
             List<TxtEnergyRecord> txtEnergyRecordsList = GetTxtEnergyRecords(pathToEnergyFile);
 
+            System.Console.WriteLine("Finding xls file names.");
+
             // Find xls and xlsx files in given path
             List<string> extensions = new List<string> { ".xls", ".xlsx" };
             var excelFilesList = Directory.GetFiles(pathToDir, "*.*")
                                     .Where(excelFile => extensions.Contains(Path.GetExtension(excelFile).ToLower()));
 
-            // Use this list to gather data of trains.
+            System.Console.WriteLine("Creating xls train data objects.");
 
+            // Use this list to gather data of trains.
             List<XlsEnergyRecord> xlsEnergyRecordsList = new List<XlsEnergyRecord>();
 
             int startRow = 4;
@@ -34,19 +39,15 @@ namespace energyRecordIntegrator
             int driverColumn = 32;
             int managerColumn = 40;
             int recordTableIndex = 0;
-
-           
+   
             foreach(string excelFilePath in excelFilesList)
             {
-                System.Console.WriteLine(excelFilePath);
-
                 using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
                 {
                     IExcelDataReader reader;
 
                     reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream);
 
-                    //// reader.IsFirstRowAsColumnNames
                     var conf = new ExcelDataSetConfiguration
                     {
                         ConfigureDataTable = _ => new ExcelDataTableConfiguration
@@ -56,7 +57,7 @@ namespace energyRecordIntegrator
                     };
 
                     var dataSet = reader.AsDataSet(conf);
-                    var dataTable = dataSet.Tables[0];
+                    var dataTable = dataSet.Tables[recordTableIndex];
 
                     for(int i = startRow; i < dataTable.Rows.Count; ++i)
                     {
@@ -70,27 +71,36 @@ namespace energyRecordIntegrator
                                 )
                             );
                     }
-
-                    //var data = dataTable.Rows[4][40];
-
-                    System.Console.WriteLine(xlsEnergyRecordsList.Count);
-                    //...
                 }
             }
-            
-            System.Console.WriteLine("There were {0} lines in TXT file.", txtEnergyRecordsList.Count);
-            System.Console.WriteLine("{0} excel files found.\n", excelFilesList.Count());
-            System.Console.WriteLine("{0} excel objects created.", xlsEnergyRecordsList.Count);
 
-            System.Console.WriteLine(txtEnergyRecordsList[0].ToString());
-            System.Console.WriteLine(txtEnergyRecordsList[1].ToString());
-            System.Console.WriteLine(txtEnergyRecordsList[2].ToString());
+            // Extract xls data to txt data.
+            foreach(TxtEnergyRecord txtEnergyRecord in txtEnergyRecordsList)
+            {
+                foreach(XlsEnergyRecord xlsEnergyRecord in xlsEnergyRecordsList)
+                {
+                    txtEnergyRecord.ExtractEligibleData(xlsEnergyRecord);
+                }
+            }
 
-            System.Console.WriteLine(xlsEnergyRecordsList[0].ToString());
-            System.Console.WriteLine(xlsEnergyRecordsList[1].ToString());
-            System.Console.WriteLine(xlsEnergyRecordsList[2].ToString());
+            // Write it to file
+            System.Console.WriteLine("Writing file.");
 
-            Console.ReadLine();
+            string newEnergyFileName = "U_ENERGIA.TXT";
+            string newEnergyFilePath = pathToDir + newEnergyFileName;
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(newEnergyFilePath, true))
+            {
+
+                file.WriteLine("EZT\tt[rok-mi-dz]\tt[h:min]\tEwe[kWh]\tEwy[kWh]\tpozycja\tdriver name\tmanagerName\n");
+
+                int l = 0;
+
+                foreach(TxtEnergyRecord txtEnergyRecord in txtEnergyRecordsList)
+                {
+                    file.WriteLine(txtEnergyRecord.ToString());
+                }
+            }
         }
 
         
