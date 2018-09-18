@@ -19,12 +19,14 @@ namespace energyRecordIntegrator
 
         // Configuration data
         static string pathToDir = @"d:\Dysk Google\Praca\ojciec\2018\energia\";
+        static List<string> extensions = new List<string> { ".xls", ".xlsx" };
+        static string newFileHeader = "EZT\tt[rok-mi-dz]\tt[h:min]\tEwe[kWh]\tEwy[kWh]\tpozycja\t1 maszynista\tkierownik pociagu\n";
+        static string newEnergyFileName = "U_ENERGIA.TXT";
 
         static void Main(string[] args)
         {
             // https://github.com/ExcelDataReader/ExcelDataReader/issues/241
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
 
             System.Console.WriteLine("Creating list of txt objects.");
 
@@ -34,7 +36,6 @@ namespace energyRecordIntegrator
 
             System.Console.WriteLine("Finding xls and xlsx file paths.");
 
-            List<string> extensions = new List<string> { ".xls", ".xlsx" };
             var excelFilesList = Directory.GetFiles(pathToDir, "*.*")
                                     .Where(excelFile => extensions.Contains(Path.GetExtension(excelFile).ToLower()));
 
@@ -52,18 +53,19 @@ namespace energyRecordIntegrator
 
             System.Console.WriteLine("Writing file.");
 
-            string newEnergyFileName = "U_ENERGIA.TXT";
             string newEnergyFilePath = pathToDir + newEnergyFileName;
 
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(newEnergyFilePath, true))
             {
-                file.WriteLine("EZT\tt[rok-mi-dz]\tt[h:min]\tEwe[kWh]\tEwy[kWh]\tpozycja\tdriver name\tmanagerName\n");
+                file.WriteLine(newFileHeader);
 
                 foreach(TxtEnergyRecord txtEnergyRecord in txtEnergyRecordsList)
                 {
                     file.WriteLine(txtEnergyRecord.ToString());
                 }
             }
+
+            Console.WriteLine("File created successfully.");
         }
 
         static private List<TxtEnergyRecord> GetTxtEnergyRecords(string pathToFile)
