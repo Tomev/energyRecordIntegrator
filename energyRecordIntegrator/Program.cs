@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ExcelDataReader;
+using System.IO;
 
 namespace energyRecordIntegrator
 { 
@@ -19,7 +20,8 @@ namespace energyRecordIntegrator
         static int plannedTrainNumberColumn = 2;
 
         // Configuration data
-        static string pathToDir = @"d:\Dysk Google\Praca\ojciec\2018\energia\";
+        //static string pathToDir = @"d:\Dysk Google\Praca\ojciec\2018\energia\";
+        static string pathToDir = Directory.GetCurrentDirectory() + @"\";
         static List<string> extensions = new List<string> { ".xls", ".xlsx" };
         static string newFileHeader = "EZT\tt[rok-mi-dz]\tt[h:min]\tEwe[kWh]\tEwy[kWh]\tpozycja\t1 maszynista\tkierownik pociągu\tPlanowy numer pociągu";
         static string newEnergyFileName = "U_ENERGIA.TXT";
@@ -97,6 +99,10 @@ namespace energyRecordIntegrator
 
             foreach (string excelFilePath in excelFilesList)
             {
+
+                Console.WriteLine("Extracting data from: {0}.", excelFilePath);
+                int j = 0;
+
                 using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
                 {
                     IExcelDataReader reader;
@@ -114,7 +120,8 @@ namespace energyRecordIntegrator
                     var dataSet = reader.AsDataSet(conf);
                     var dataTable = dataSet.Tables[recordTableIndex];
 
-                    for (int i = startRow; i < dataTable.Rows.Count; ++i)
+                    // Note that there's additional condition for for to exit.
+                    for (int i = startRow; i < dataTable.Rows.Count && !dataTable.Rows[i][timeStartColumn].ToString().Equals(""); ++i)
                     {
                         xlsEnergyRecordsList.Add(
                             new XlsEnergyRecord(
