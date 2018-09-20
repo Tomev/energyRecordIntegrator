@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ExcelDataReader;
-using System.IO;
 
 namespace energyRecordIntegrator
 { 
@@ -31,20 +30,22 @@ namespace energyRecordIntegrator
             // https://github.com/ExcelDataReader/ExcelDataReader/issues/241
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-            System.Console.WriteLine("Creating list of txt objects.");
+            Console.WriteLine("Creating list of txt objects.");
 
             string pathToEnergyFile = pathToDir + "ENERGIA.TXT";
 
             List<TxtEnergyRecord> txtEnergyRecordsList = GetTxtEnergyRecords(pathToEnergyFile);
 
-            System.Console.WriteLine("Finding xls and xlsx file paths.");
+            Console.WriteLine("Finding xls and xlsx file paths.");
 
             var excelFilesList = Directory.GetFiles(pathToDir, "*.*")
                                     .Where(excelFile => extensions.Contains(Path.GetExtension(excelFile).ToLower()));
 
-            System.Console.WriteLine("Creating xls train data objects.");
+            Console.WriteLine("Creating xls train data objects.");
 
             List<XlsEnergyRecord> xlsEnergyRecordsList = GetXlsEnergyRecords(excelFilesList);
+
+            Console.WriteLine("Extracting excel data to txt file.");
 
             foreach(TxtEnergyRecord txtEnergyRecord in txtEnergyRecordsList)
             {
@@ -54,11 +55,11 @@ namespace energyRecordIntegrator
                 }
             }
 
-            System.Console.WriteLine("Writing file.");
+            Console.WriteLine("Writing file.");
 
             string newEnergyFilePath = pathToDir + newEnergyFileName;
 
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(newEnergyFilePath, true, System.Text.Encoding.Default))
+            using (StreamWriter file = new StreamWriter(newEnergyFilePath, true, System.Text.Encoding.Default))
             {
                 file.WriteLine(newFileHeader);
 
@@ -77,8 +78,7 @@ namespace energyRecordIntegrator
 
             string line;
 
-            System.IO.StreamReader file =
-                new System.IO.StreamReader(pathToFile, System.Text.Encoding.GetEncoding("windows-1250"));
+            StreamReader file = new StreamReader(pathToFile, System.Text.Encoding.GetEncoding("windows-1250"));
 
             // Ingnore first line (headers)
             line = file.ReadLine();
@@ -107,7 +107,7 @@ namespace energyRecordIntegrator
                 {
                     IExcelDataReader reader;
 
-                    reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream);
+                    reader = ExcelReaderFactory.CreateReader(stream);
 
                     var conf = new ExcelDataSetConfiguration
                     {
