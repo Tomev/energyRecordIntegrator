@@ -19,7 +19,6 @@ namespace energyRecordIntegrator
         static int plannedTrainNumberColumn = 2;
 
         // Configuration data
-        //static string pathToDir = @"d:\Dysk Google\Praca\ojciec\2018\energia\";
         static string pathToDir = Directory.GetCurrentDirectory() + @"\";
         static List<string> extensions = new List<string> { ".xls", ".xlsx" };
         static string newFileHeader = "EZT\tt[rok-mi-dz]\tt[h:min]\tEwe[kWh]\tEwy[kWh]\tpozycja\t1 maszynista\tkierownik pociągu\tPlanowy numer pociągu";
